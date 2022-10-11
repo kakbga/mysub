@@ -1,0 +1,209 @@
+# Clash小白配置 制作by Orz-3 TG频道;https://t.me/Orzmini 2022/7/29更新
+
+mixed-port: 7890
+
+allow-lan: false
+
+bind-address: '*'
+
+mode: Rule
+
+log-level: info
+
+ipv6: false
+
+external-controller: 127.0.0.1:9090
+
+hosts:
+  'mtalk.google.com': 108.177.125.188
+  'dl.google.com': 180.163.151.161
+  'dl.l.google.com': 180.163.151.161
+
+profile:
+  store-selected: false
+
+dns:
+  enable: false
+  listen: 0.0.0.0:53
+  default-nameserver:
+    - 223.5.5.5
+  enhanced-mode: redir-host
+  fake-ip-range: 198.18.0.1/16 
+  fake-ip-filter:
+    - '*.lan'
+    - localhost.ptlogin2.qq.com
+    - '+.srv.nintendo.net'
+    - '+.stun.playstation.net'
+    - '+.msftconnecttest.com'
+    - '+.msftncsi.com'
+    - '+.xboxlive.com'
+    - 'msftconnecttest.com'
+    - 'xbox.*.microsoft.com'
+    - '*.battlenet.com.cn'
+    - '*.battlenet.com'
+    - '*.blzstatic.cn'
+    - '*.battle.net'
+  
+  nameserver:
+    - 223.5.5.5
+  fallback-filter:
+    geoip: true
+    ipcidr:
+
+proxies:
+
+proxy-providers:
+
+  Proxy:
+    type: http
+    url: "█████████████"
+    interval: 3600
+    path: ./ProxyList.yaml
+    health-check:
+      enable: true
+      interval: 600
+      url: http://www.gstatic.com/generate_204
+
+proxy-groups:
+
+  - name: "🟢节点选择"
+    type: select
+    use:
+      - Proxy
+    url: 'http://www.gstatic.com/generate_204'
+    interval: 300
+
+  - name: "🔵自动选择"
+    type: url-test
+    use:
+      - Proxy
+    url: 'http://www.gstatic.com/generate_204'
+    interval: 300
+
+  - name: "🟦全球加速"
+    type: select
+    proxies:
+      - 🟢节点选择
+      - 🔵自动选择
+
+  - name: "🟩港台番剧"
+    type: select
+    proxies:
+      - DIRECT
+      - 🟢节点选择
+
+  - name: "🟪国际媒体"
+    type: select
+    proxies:
+      - 🟢节点选择
+      - 🔵自动选择
+
+  - name: "🟨电报代理"
+    type: select
+    proxies:
+      - 🟢节点选择
+      - 🔵自动选择
+      - DIRECT
+
+  - name: "🟧黑白名单"
+    type: select
+    proxies:
+      - 🟢节点选择
+      - 🔵自动选择
+      - DIRECT
+
+rule-providers:
+
+  Unbreak:
+    type: http
+    behavior: classical
+    path: ./RuleSet/Unbreak.yaml
+    url: https://cdn.jsdelivr.net/gh/DivineEngine/Profiles@master/Clash/RuleSet/Unbreak.yaml
+    interval: 86400
+
+  Advertising:
+    type: http
+    behavior: classical
+    path: ./RuleSet/Guard/Advertising.yaml
+    url: https://cdn.jsdelivr.net/gh/DivineEngine/Profiles@master/Clash/RuleSet/Guard/Advertising.yaml
+    interval: 86400
+
+  Hijacking:
+    type: http
+    behavior: classical
+    path: ./RuleSet/Guard/Hijacking.yaml
+    url: https://cdn.jsdelivr.net/gh/DivineEngine/Profiles@master/Clash/RuleSet/Guard/Hijacking.yaml
+    interval: 86400
+
+  Privacy:
+    type: http
+    behavior: classical
+    path: ./RuleSet/Guard/Privacy.yaml
+    url: https://cdn.jsdelivr.net/gh/DivineEngine/Profiles@master/Clash/RuleSet/Guard/Privacy.yaml
+    interval: 86400
+
+  Telegram:
+    type: http
+    behavior: classical
+    path: ./RuleSet/Extra/Telegram/Telegram.yaml
+    url: https://cdn.jsdelivr.net/gh/DivineEngine/Profiles@master/Clash/RuleSet/Extra/Telegram/Telegram.yaml
+    interval: 86400
+
+  Streaming:
+    type: http
+    behavior: classical
+    path: ./RuleSet/StreamingMedia/Streaming.yaml
+    url: https://cdn.jsdelivr.net/gh/DivineEngine/Profiles@master/Clash/RuleSet/StreamingMedia/Streaming.yaml
+    interval: 86400
+
+  StreamingSE:
+    type: http
+    behavior: classical
+    path: ./RuleSet/StreamingMedia/StreamingSE.yaml
+    url: https://cdn.jsdelivr.net/gh/DivineEngine/Profiles@master/Clash/RuleSet/StreamingMedia/StreamingSE.yaml
+    interval: 86400
+
+  Global:
+    type: http
+    behavior: classical
+    path: ./RuleSet/Global.yaml
+    url: https://cdn.jsdelivr.net/gh/DivineEngine/Profiles@master/Clash/RuleSet/Global.yaml
+    interval: 86400
+
+  China:
+    type: http
+    behavior: classical
+    path: ./RuleSet/China.yaml
+    url: https://cdn.jsdelivr.net/gh/DivineEngine/Profiles@master/Clash/RuleSet/China.yaml
+    interval: 86400
+
+  ChinaIP:
+    type: http
+    behavior: ipcidr
+    path: ./RuleSet/Extra/ChinaIP.yaml
+    url: https://cdn.jsdelivr.net/gh/DivineEngine/Profiles@master/Clash/RuleSet/Extra/ChinaIP.yaml
+    interval: 86400
+
+rules:
+  - RULE-SET,Unbreak,DIRECT
+  - RULE-SET,Advertising,REJECT
+  - RULE-SET,Hijacking,REJECT
+  - RULE-SET,Privacy,REJECT
+  - RULE-SET,Global,🟦全球加速
+  - RULE-SET,StreamingSE,🟩港台番剧
+  - RULE-SET,Streaming,🟪国际媒体
+  - RULE-SET,Telegram,🟨电报代理
+ # - DOMAIN,lens.l.google.com,美国节点 #google voice
+  - RULE-SET,China,DIRECT
+  - IP-CIDR,192.168.0.0/16,DIRECT
+  - IP-CIDR,10.0.0.0/8,DIRECT
+  - IP-CIDR,172.16.0.0/12,DIRECT
+  - IP-CIDR,127.0.0.0/8,DIRECT
+  - IP-CIDR,100.64.0.0/10,DIRECT
+  - IP-CIDR,224.0.0.0/4,DIRECT
+  - IP-CIDR,fe80::/10,DIRECT
+  - IP-CIDR,119.28.28.28/32,DIRECT
+  - IP-CIDR,182.254.116.0/24,DIRECT
+  - GEOIP,CN,DIRECT
+
+  - MATCH,🟧黑白名单
